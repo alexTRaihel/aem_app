@@ -1,23 +1,58 @@
 package aemapp.core.listeners;
 
-import org.osgi.framework.Constants;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
-@Component(service = EventHandler.class,
-        immediate = true,
-        property = {
-                Constants.SERVICE_DESCRIPTION + "=Module 7 AEM courses",
-                EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/*",
-                EventConstants.EVENT_FILTER + "=(path=/content/ht)"
-        })
-public class PropertyRemoveListenerImpl implements EventHandler {
+import javax.jcr.Session;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import java.util.HashMap;
+import java.util.Map;
+
+@Component(service = EventListener.class, immediate = true)
+public class PropertyRemoveListenerImpl implements EventListener {
+
+    @Reference
+    private ResourceResolverFactory resolverFactory;
+
+    private Session session;
 
     @Override
-    public void handleEvent(Event event) {
+    public void onEvent(EventIterator eventIterator) {
+        if (eventIterator.hasNext()) {
+            eventIterator.nextEvent();
+        }
+    }
 
+    @Activate
+    private void activate(ComponentContext context) {
+
+        try {
+            Map<String, Object> params = new HashMap<>();
+
+            params.put(ResourceResolverFactory.SUBSERVICE, "eventingService");
+            ResourceResolver resourceResolver = resolverFactory.getServiceResourceResolver(params);
+
+            session = resourceResolver.adaptTo(Session.class);
+
+            session.getWorkspace().getObservationManager().addEventListener(this,
+                    Event.PROPERTY_REMOVED, "/content/ht", true, null, null, false);
+
+        } catch (Exception ex) {
+
+        }
+    }
+
+    @Deactivate
+    private void deactivate() {
+        if (session != null) {
+            session.logout();
+        }
     }
 }
