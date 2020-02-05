@@ -24,6 +24,7 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * A service to demonstrate how changes in the resource tree
  * can be listened for. It registers an event handler service.
@@ -43,6 +44,7 @@ public class SimpleResourceListener implements EventHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public void handleEvent(final Event event) {
+
         logger.debug("Resource event: {} at: {}", event.getTopic(), event.getProperty(SlingConstants.PROPERTY_PATH));
     }
 }

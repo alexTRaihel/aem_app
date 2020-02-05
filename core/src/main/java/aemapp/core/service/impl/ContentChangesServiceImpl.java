@@ -8,6 +8,7 @@ import com.day.cq.wcm.api.WCMException;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.models.factory.ModelFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -19,6 +20,9 @@ public class ContentChangesServiceImpl implements ContentChangesService {
 
     @Reference
     private JCRAuth jcrAuth;
+
+    @Reference
+    private ModelFactory modelFactory;
 
     @Override
     public void createNewPageVersion(Page prevPage) {

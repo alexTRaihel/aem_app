@@ -42,7 +42,7 @@ public class PropertyRemoveListenerImpl implements EventListener {
             session = resourceResolver.adaptTo(Session.class);
 
             session.getWorkspace().getObservationManager().addEventListener(this,
-                    Event.PROPERTY_REMOVED, "/content/ht", true, null, null, false);
+                    Event.PROPERTY_REMOVED | Event.NODE_REMOVED, "/content/ht", true, null, null, false);
 
         } catch (Exception ex) {
 
