@@ -47,7 +47,7 @@ public class TestingWorkflowProcessor implements WorkflowProcess {
             }
 
             Workspace workspace = getWorkspace(resourceResolver);
-            workspace.move(resourcePath, getMovePath(resource));
+            //workspace.move(resourcePath, getMovePath(resource));
 
         } catch (LoginException e) {
             e.printStackTrace();
